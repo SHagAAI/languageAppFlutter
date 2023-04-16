@@ -84,24 +84,27 @@ class _AnswersOptionState extends State<AnswersOption> {
       getColor();
     });
     
-    Future.delayed(const Duration(seconds: 2)).then((_) => wController!.nextQuestionPage(context));
+    Future.delayed(const Duration(seconds: 1)).then((_) => wController!.nextQuestionPage(context));
     
-    // wController!.nextQuestionPage(context);
+    
   }
 
-  void getColor() {
+  IconData getIcon(){
+    return getColor() == R.myColors.greenColor ? Icons.done : Icons.close;
+  }
+
+  Color getColor() {
     if (wController!.getQuestionsAnsweredStatus) {
       if (wController!.getAnsweredStatus) {
-        myColor = R.myColors.greenColor;
-        return;
+         
+        return R.myColors.greenColor;
       } else {
-        myColor = R.myColors.redColor;
-        return;
+        
+        return R.myColors.redColor;
       }
     }
 
-    myColor = R.myColors.grayColor;
-    // return R.myColors.greenColor;
+    return R.myColors.grayColor;
   }
 
   @override
@@ -113,7 +116,7 @@ class _AnswersOptionState extends State<AnswersOption> {
         padding: EdgeInsets.all(20),
         margin: EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
-          border: Border.all(color: myColor, width: 2),
+          border: Border.all(color: getColor(), width: 2),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Row(
@@ -130,13 +133,13 @@ class _AnswersOptionState extends State<AnswersOption> {
               height: 26,
               width: 26,
               decoration: BoxDecoration(
-                color: Colors.transparent,
+                color: getColor() == R.myColors.grayColor ? Colors.transparent : getColor(),
                 borderRadius: BorderRadius.circular(50),
                 border: Border.all(
-                  color: myColor,
+                  color: getColor(),
                 ),
               ),
-              child: null,
+              child: getColor() == R.myColors.grayColor ? null : Icon(getIcon(), size: 16,),
             )
           ],
         ),
