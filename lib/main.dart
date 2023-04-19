@@ -1,6 +1,5 @@
 import 'package:flashcard_objbox/screens/flashcard_screen.dart';
 import 'package:flashcard_objbox/screens/match_screen.dart';
-import 'package:flashcard_objbox/screens/prototipe.dart';
 import 'package:flashcard_objbox/screens/score_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
