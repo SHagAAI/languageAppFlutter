@@ -87,7 +87,7 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
       margin: EdgeInsets.only(bottom: 18),
       child: Container(
         padding: EdgeInsets.all(10),
-        // width: 519,
+        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -157,54 +157,6 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
         ),
       ),
     );
-    // return Card(
-    //   color: R.myColors.hookersGreen.withOpacity(0.2),
-    //   margin: EdgeInsets.only(bottom: 18),
-    //   child: Container(
-    //     padding: EdgeInsets.all(10),
-    //     width: 519,
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.end,
-    //       children: [
-    //         IconButton(
-    //           onPressed: () {
-    //             displayedWord != null
-    //                 ? setState(
-    //                     () {
-    //                       bool stat = Provider.of<WordController>(context,
-    //                               listen: false)
-    //                           .deleteWord(displayedWord);
-    //                       if (stat) {
-    //                         cards.removeAt(index!);
-    //                       }
-    //                     },
-    //                   )
-    //                 : setState(() {
-    //                     cards.removeAt(index!);
-    //                   });
-    //           },
-    //           icon: const Icon(Icons.delete),
-    //         ),
-    //         Padding(
-    //           padding: const EdgeInsets.symmetric(horizontal: 80),
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               TextFieldQzlet(
-    //                 gC: fMC,
-    //                 fieldTag: "TERM",
-    //               ),
-    //               TextFieldQzlet(
-    //                 gC: mMC,
-    //                 fieldTag: "TERM",
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
   void insertMultiple() {
