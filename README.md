@@ -5,4 +5,4 @@
 
 [Demo app](https://youtu.be/ITcChnFfRnw)
 
-* Developed on Windows and for Windows screen size. 
+* Developed for Windows screen size. 
