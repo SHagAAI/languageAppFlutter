@@ -10,9 +10,8 @@ class TextFieldQzlet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    
     return Container(
-      width: MediaQuery.of(context).size.width * 0.3,
+      width: MediaQuery.of(context).size.width * 0.2 + 100,
       child: Column(
         children: [
           TextFormField(

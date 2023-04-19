@@ -4,12 +4,12 @@ import 'package:flashcard_objbox/models/word_model.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 
 import '../widgets/bt_button.dart';
 import '../widgets/text_field_qzlet.dart';
 
 class AddNewWordScreen extends StatefulWidget {
-  // final WordCollectionEntity ownedByThisCollection;
   const AddNewWordScreen({
     super.key,
   });
@@ -83,13 +83,11 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
 
     foreignMultiController.add(fMC);
     meaningMultiController.add(mMC);
-
     return Card(
-      color: R.myColors.hookersGreen.withOpacity(0.2),
       margin: EdgeInsets.only(bottom: 18),
       child: Container(
         padding: EdgeInsets.all(10),
-        width: 519,
+        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -112,21 +110,48 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
               },
               icon: const Icon(Icons.delete),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 80),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextFieldQzlet(
-                    gC: fMC,
-                    fieldTag: "TERM",
-                  ),
-                  TextFieldQzlet(
-                    gC: mMC,
-                    fieldTag: "TERM",
-                  ),
-                ],
-              ),
+            LayoutBuilder(
+              builder: (p0, p1) {
+                if (p1.maxWidth <= 850) {
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextFieldQzlet(
+                          gC: fMC,
+                          fieldTag: "TERM",
+                        ),
+                        TextFieldQzlet(
+                          gC: mMC,
+                          fieldTag: "TERM",
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    
+                 
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: TextFieldQzlet(
+                          gC: fMC,
+                          fieldTag: "TERM",
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: TextFieldQzlet(
+                          gC: mMC,
+                          fieldTag: "TERM",
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -187,13 +212,14 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
       ),
       body: Center(
         child: Column(
+         
           children: [
             const SizedBox(
               height: 10,
             ),
             Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.8,
+                width: MediaQuery.of(context).size.width * 0.6,
                 child: ListView.builder(
                   controller: controller,
                   itemCount: cards.length,
