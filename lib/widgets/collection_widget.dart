@@ -50,7 +50,7 @@ class _CollectionWidgetState extends State<CollectionWidget> {
     BuildContext dialogContext;
     final aniListKey = Provider.of<WordController>(context, listen: false)
         .getGlobalAnimatedListKey;
-    
+
     return Container(
       padding: const EdgeInsets.only(left: 7),
       margin: const EdgeInsets.symmetric(vertical: 5),
@@ -100,16 +100,25 @@ class _CollectionWidgetState extends State<CollectionWidget> {
                             CupertinoDialogAction(
                               child: const Text('Delete'),
                               onPressed: () {
-                                // _store.box<WordCollectionEntity>().remove(widget.collection.id);
                                 bool status = Provider.of<WordController>(ctx,
                                         listen: false)
                                     .deleteCollection(widget.collection);
-                                // print("Remove index - ${widget.wantedIndex}");
-                                aniListKey.currentState!.removeItem(
-                                    widget.wantedIndex,
-                                    (context, animation) => CollectionWidget(
-                                        widget.collection, widget.wantedIndex));
+
                                 if (status) {
+                                  aniListKey.currentState!.removeItem(
+                                    widget.wantedIndex,
+                                    duration: const Duration(milliseconds: 800),
+                                    (context, animation) => SlideTransition(
+                                      position: animation.drive(Tween(
+                                          begin: const Offset(-2, 0),
+                                          end: const Offset(0, 0)).chain(CurveTween(curve: Curves.easeOut))),
+                                      child: CollectionWidget(
+                                        widget.collection,
+                                        widget.wantedIndex,
+                                      ),
+                                    ),
+                                  );
+
                                   Navigator.of(
                                     dialogContext,
                                     rootNavigator: true,
