@@ -1,5 +1,6 @@
 import 'package:flashcard_objbox/objectbox.g.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 
@@ -16,10 +17,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
   Store? _stores;
   Query<WordCollectionEntity>? queries;
-
 
   @override
   didChangeDependencies() {
@@ -29,10 +28,7 @@ class _HomePageState extends State<HomePage> {
           .initializeStore("home1");
 
       queries = _stores!.box<WordCollectionEntity>().query().build();
-
-    
     } else if (_stores!.isClosed()) {
- 
       _stores = Provider.of<WordController>(context, listen: false)
           .initializeStore("home2");
 
@@ -53,6 +49,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    WordController wordC = Provider.of<WordController>(context, listen: false);
     return Scaffold(
       body: Center(
         child: Container(
@@ -88,7 +85,8 @@ class _HomePageState extends State<HomePage> {
                     label: const Text("Add new Collection"),
 
                     onPressed: () {
-                      Navigator.of(context).pushNamed(AddNewCollection.routeName);
+                      Navigator.of(context)
+                          .pushNamed(AddNewCollection.routeName);
                     },
                   )
                 ],
@@ -96,20 +94,16 @@ class _HomePageState extends State<HomePage> {
               const Divider(
                 color: Colors.white,
               ),
-
-              
-              Consumer<WordController>(
-              
-                builder: (context, valueGetCollection, _) => SingleChildScrollView(
-                  child: AnimatedList(
-                    shrinkWrap: true,
-                    key: valueGetCollection.getGlobalAnimatedListKey,
-                    initialItemCount: valueGetCollection.collectionDatas.length,
-                    itemBuilder: (context, index, animation) {
-                      
-                      return CollectionWidget(valueGetCollection.collectionDatas[index], index);
-                    },
-                  ),
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: AnimatedList(
+                  shrinkWrap: true,
+                  key: wordC.getGlobalAnimatedListKey,
+                  initialItemCount: wordC.collectionDatas.length,
+                  itemBuilder: (context, index, animation) {
+                    return CollectionWidget(
+                        wordC.collectionDatas[index], index);
+                  },
                 ),
               ),
             ],
