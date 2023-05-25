@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'dart:math';
 
 import 'package:flashcard_objbox/models/page_route_helper.dart';
@@ -9,21 +9,20 @@ import 'package:flashcard_objbox/screens/learn_screen.dart';
 import 'package:flashcard_objbox/screens/score_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
-
+import 'package:path/path.dart' as p;
 
 class WordController with ChangeNotifier {
   List<WordEntity> _listWord = [];
   List<WordCollectionEntity> _listCollection = [];
   Store? _store;
-  final GlobalKey<AnimatedListState> _animatedListKey = GlobalKey();
+  GlobalKey<AnimatedListState>? _animatedListKey;
   // bool _isinit = true;
 
   late final Box<WordCollectionEntity> collectionBox;
   late final Box<WordEntity> wordBox;
 
   // For Quiz Page
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   List<int> answersOptionHelper = [];
   Random randomizer = Random();
   List<WordEntity> _questionList = [];
@@ -42,7 +41,6 @@ class WordController with ChangeNotifier {
   // List<MatchModel> _matchDataList = [];
 
   List<ValueNotifier<int>> myValueNotifierList = [];
- 
 
   /*
   /------------/
@@ -52,39 +50,46 @@ class WordController with ChangeNotifier {
   */
 
   // Initializing STORE
-  Store initializeStore(String originCalled) {
-    Directory paths = Directory("");
+
+  Future<Store> initializeStore(String originCalled) async {
+
+    
 
     if (_store == null || _store!.isClosed()) {
-      
+      _animatedListKey = GlobalKey<AnimatedListState>();
+      final paths = await getApplicationDocumentsDirectory();
 
-      getApplicationDocumentsDirectory().then((dir) => paths = dir);
       _store = Store(getObjectBoxModel(),
-          directory: join(paths.path, 'objectBoxLanguangeApp'));
+          directory: p.join(
+            paths.path,
+            'objectBoxLanguangeApp',
+          ));
       // _store = Store(getObjectBoxModel(),
       //     directory: join(paths.path, 'objectboxdbHagi112233'));
-
 
       Query<WordCollectionEntity> tempQuery =
           _store!.box<WordCollectionEntity>().query().build();
 
       _listCollection = tempQuery.find();
+      for (var i = 0; i < _listCollection.length; i++) {
+        _animatedListKey!.currentState!.insertItem(i);
+      }
 
-     
     } else {
-      
       return _store!;
     }
 
     return _store!;
   }
 
-  void fetchWord(WordCollectionEntity collectionEntity, Store tempStore) {
+  Future<void> fetchWord(
+      WordCollectionEntity collectionEntity, Store tempStore) async {
     if (tempStore.isClosed()) {
-      tempStore = initializeStore("fetchWord");
+      tempStore = await initializeStore("fetchWord");
     }
 
     _listWord = updateListOfWord(collectionEntity.id, tempStore);
+    
   }
 
   /*
@@ -125,7 +130,7 @@ class WordController with ChangeNotifier {
   }
 
   GlobalKey<AnimatedListState> get getGlobalAnimatedListKey {
-    return _animatedListKey;
+    return _animatedListKey!;
   }
 
   List<WordEntity> get wordDatas {
@@ -150,7 +155,7 @@ class WordController with ChangeNotifier {
   void addCollection(String titleCollection, WordEntity wordObjectToAdded,
       Store tempStore) async {
     if (tempStore.isClosed()) {
-      tempStore = initializeStore("addCollection");
+      tempStore = await initializeStore("addCollection");
     }
 
     WordCollectionEntity newWordCollection =
@@ -163,17 +168,18 @@ class WordController with ChangeNotifier {
         Box<WordCollectionEntity>(tempStore);
     collectionBox.put(newWordCollection);
 
-    _animatedListKey.currentState!
-        .insertItem(_listCollection.isEmpty ? 0 : _listCollection.length - 1);
+    // _animatedListKey.currentState!.insertItem(0);
+    _animatedListKey!.currentState!
+        .insertItem(_listCollection.isEmpty ? 0 : _listCollection.length);
     _listCollection.add(newWordCollection);
+
     notifyListeners();
-    
   }
 
   void addNewWord(String newWord, String newMeaning,
-      WordCollectionEntity collectionTheWordBelongTo, Store tempStore) {
+      WordCollectionEntity collectionTheWordBelongTo, Store tempStore) async {
     if (tempStore.isClosed()) {
-      tempStore = initializeStore("addNewWord");
+      tempStore = await initializeStore("addNewWord");
     }
 
     WordEntity newWordToAdd =
@@ -197,9 +203,9 @@ class WordController with ChangeNotifier {
   }
 
   void addMultipleNewWord(List<WordEntity> theMultipleData,
-      int idOfTheCollection, Store tempStore) {
+      int idOfTheCollection, Store tempStore) async {
     if (tempStore.isClosed()) {
-      tempStore = initializeStore("addNewWord");
+      tempStore = await initializeStore("addNewWord");
     }
 
     tempStore.box<WordEntity>().putMany(theMultipleData);
@@ -211,13 +217,14 @@ class WordController with ChangeNotifier {
     notifyListeners();
   }
 
-  bool deleteWord(WordEntity intendedWord) {
+  Future<bool> deleteWord(WordEntity intendedWord) async {
     if (_store!.isClosed()) {
-      _store = initializeStore("deleteCollection");
+      _store = await initializeStore("deleteCollection");
     }
 
     bool statusDeleteWord = _store!.box<WordEntity>().remove(intendedWord.id);
     _listWord.removeWhere((element) => element.id == intendedWord.id);
+    
     if (statusDeleteWord) {
       notifyListeners();
       return statusDeleteWord;
@@ -226,13 +233,14 @@ class WordController with ChangeNotifier {
     return statusDeleteWord;
   }
 
-  bool deleteCollection(WordCollectionEntity intendedCollection) {
+  Future<bool> deleteCollection(WordCollectionEntity intendedCollection) async {
     if (_store!.isClosed()) {
-      _store = initializeStore("deleteCollection");
+      _store = await initializeStore("deleteCollection");
     }
 
     bool result =
         _store!.box<WordCollectionEntity>().remove(intendedCollection.id);
+    // _animatedListKey!.currentState.removeItem(deletingIndex, (context, animation) => null);
 
     _listCollection
         .removeWhere((element) => element.id == intendedCollection.id);
@@ -276,10 +284,10 @@ class WordController with ChangeNotifier {
     if (_iDontKnowTheWordCounter + _iKnowTheWordCounter < _listWord.length) {
       return _iDontKnowTheWordCounter + _iKnowTheWordCounter;
     } else {
-      
       Navigator.of(ctx).pushReplacementNamed(ScoreScreen.routeName,
-          arguments:
-              PageRouteHelper("You remember $_iKnowTheWordCounter words and have $_iDontKnowTheWordCounter more words to learn ", FlashCardScreen.routeName));
+          arguments: PageRouteHelper(
+              "You remember $_iKnowTheWordCounter words and have $_iDontKnowTheWordCounter more words to learn ",
+              FlashCardScreen.routeName));
       return null;
     }
   }
@@ -360,8 +368,9 @@ class WordController with ChangeNotifier {
           duration: const Duration(seconds: 1), curve: Curves.easeInOut);
     } else {
       Navigator.of(ctx).pushReplacementNamed(ScoreScreen.routeName,
-          arguments:
-              PageRouteHelper("You have $_correctAnswer correct answer out of ${_questionList.length}", LearnScreen.routeName));
+          arguments: PageRouteHelper(
+              "You have $_correctAnswer correct answer out of ${_questionList.length}",
+              LearnScreen.routeName));
     }
   }
 
@@ -389,9 +398,6 @@ class WordController with ChangeNotifier {
     myValueNotifierList.addAll(
         List.generate(_questionList.length * 2, (_) => ValueNotifier<int>(0)));
 
-
     return myValueNotifierList;
   }
-
-
 }

@@ -10,7 +10,7 @@ class MatchCard extends StatefulWidget {
   final ValueNotifier<int> myValNotifier;
   final Key keyIdentifier;
 
-  MatchCard({
+  const MatchCard({
     super.key,
     required this.displayedText,
     required this.sendForInspection,

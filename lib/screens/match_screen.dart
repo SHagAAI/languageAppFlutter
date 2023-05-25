@@ -136,7 +136,7 @@ class _MatchScreenState extends State<MatchScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         child: Center(
           child: Container(
             width: 400,

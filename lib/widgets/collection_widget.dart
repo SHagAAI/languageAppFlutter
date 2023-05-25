@@ -1,4 +1,4 @@
-import 'package:flashcard_objbox/objectbox.g.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -12,7 +12,6 @@ import '../models/word_model.dart';
 
 class CollectionWidget extends StatefulWidget {
   final WordCollectionEntity collection;
-  // final GlobalKey<AnimatedListState> _keyForDeleting;
   final int wantedIndex;
   const CollectionWidget(
     this.collection,
@@ -25,24 +24,24 @@ class CollectionWidget extends StatefulWidget {
 }
 
 class _CollectionWidgetState extends State<CollectionWidget> {
-  // Box<WordCollectionEntity> collectionBox = objectnyaObjectBox.store.box<WordCollectionEntity>();
-  late Store _store;
-  bool _isInit = true;
+
+  // Store? _store;
+  // bool _isInit = true;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
-    if (_isInit) {
-      _store = Provider.of<WordController>(context, listen: false)
-          .initializeStore("collection_widget");
-      _isInit = false;
-    }
+    // if (_isInit) {
+    //   _store = await Provider.of<WordController>(context, listen: false)
+    //       .initializeStore("collection_widget");
+    //   _isInit = false;
+    // }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _store.close();
+    
   }
 
   @override
@@ -99,8 +98,8 @@ class _CollectionWidgetState extends State<CollectionWidget> {
                           actions: [
                             CupertinoDialogAction(
                               child: const Text('Delete'),
-                              onPressed: () {
-                                bool status = Provider.of<WordController>(ctx,
+                              onPressed: () async {
+                                bool status = await Provider.of<WordController>(ctx,
                                         listen: false)
                                     .deleteCollection(widget.collection);
 

@@ -14,7 +14,7 @@ import 'package:flashcard_objbox/screens/home_page.dart';
 import 'helper/r.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

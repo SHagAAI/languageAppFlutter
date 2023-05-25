@@ -30,7 +30,7 @@ class TextFieldQzlet extends StatelessWidget {
                 ),
               ),
               border: OutlineInputBorder(
-                  borderSide: BorderSide(),
+                  borderSide: const BorderSide(),
                   borderRadius: BorderRadius.circular(8)),
             ),
           ),
