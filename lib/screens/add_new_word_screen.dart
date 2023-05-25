@@ -1,10 +1,10 @@
-import 'package:flashcard_objbox/helper/r.dart';
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flashcard_objbox/models/word_controller.dart';
 import 'package:flashcard_objbox/models/word_model.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 
 import '../widgets/bt_button.dart';
 import '../widgets/text_field_qzlet.dart';
@@ -50,7 +50,7 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
   void delete() {}
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
 
     if (_isInit) {
@@ -60,11 +60,9 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
       }
 
       counterForExistingData = wdList.length;
-      _store = Provider.of<WordController>(context, listen: false)
+      _store = await Provider.of<WordController>(context, listen: false)
           .initializeStore("addNewWord");
-      //  Provider.of<WordController>(context, listen: false)
-      //     .fetchWord(wdCollection, _store!);
-
+      
       // Check first, am I succed to get the collection these words belongs to ?
       ownedByThisCollection = wdList[0].collection.target;
 
@@ -95,8 +93,8 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
               onPressed: () {
                 displayedWord != null
                     ? setState(
-                        () {
-                          bool stat = Provider.of<WordController>(context,
+                        () async {
+                          bool stat = await Provider.of<WordController>(context,
                                   listen: false)
                               .deleteWord(displayedWord);
                           if (stat) {

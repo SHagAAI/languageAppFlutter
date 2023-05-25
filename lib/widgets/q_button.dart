@@ -10,7 +10,7 @@ class QButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
+      width: 125,
       child: ElevatedButton(
         onPressed: changePage,
         child: Row(
